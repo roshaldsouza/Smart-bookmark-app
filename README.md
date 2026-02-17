@@ -12,7 +12,7 @@
 
 ---
 
-> 💡 **Live Demo**: [your-app.vercel.app](https://smart-bookmark-app-68pt.vercel.app/)
+> 💡 **Live Demo**: (https://smart-bookmark-app-68pt.vercel.app/)
 
 </div>
 

@@ -1,146 +1,152 @@
-# Smart Bookmark Manager
+<div align="center">
 
-A modern, real-time bookmark manager built with Next.js 14, Supabase, and Tailwind CSS. Features Google OAuth authentication, real-time synchronization, and a beautiful, responsive UI.
+# 🔖 Smart Bookmark Manager
 
-## Features
+**A real-time, privacy-first bookmark manager built with Next.js 14, Supabase & Tailwind CSS**
 
-✅ **Google OAuth Authentication** - Secure, passwordless sign-in
-✅ **Private Bookmarks** - Each user sees only their own bookmarks
-✅ **Real-time Sync** - Changes appear instantly across all open tabs
-✅ **CRUD Operations** - Add, view, and delete bookmarks
-✅ **Responsive Design** - Beautiful UI that works on all devices
-✅ **Deployed on Vercel** - Production-ready with live URL
+![Next.js](https://img.shields.io/badge/Next.js_14-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
-## Tech Stack
+---
 
-- **Frontend**: Next.js 14 (App Router), React, TypeScript
-- **Styling**: Tailwind CSS
-- **Backend**: Supabase (Auth, Database, Realtime)
-- **Deployment**: Vercel
-- **Icons**: Lucide React
+<!-- Replace the link below with your actual deployed URL screenshot -->
+> 💡 **Live Demo**: [your-app.vercel.app](https://smart-bookmark-app-68pt.vercel.app/)
 
-## Project Structure
+</div>
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|--------|-------------|
+| 🔐 **Google OAuth** | Secure sign-in via Google — no passwords needed |
+| 🔒 **Private Bookmarks** | Every user sees only their own data (Row Level Security) |
+| ⚡ **Real-time Sync** | Add/delete bookmarks — changes appear instantly across all open tabs |
+| 📌 **Add Bookmarks** | Save any URL with a custom title in one click |
+| 🗑️ **Delete Bookmarks** | Remove bookmarks with a smooth hover-to-reveal button |
+| 📱 **Responsive UI** | Works beautifully on mobile, tablet, and desktop |
+| 🚀 **Deployed on Vercel** | Production-ready with a live public URL |
+
+---
+
+## 📸 Screenshots
+
+### 🔑 Login Screen
+<!-- Add your screenshot here -->
+![Login Screen](./snapshots/login.png)
+
+
+### 📌 Adding a Bookmark
+<!-- Add your screenshot here — or use a GIF! -->
+![Adding Bookmark](./snapshots/add-bookmark.gif)
+
+
+### 📋 Bookmarks List
+<!-- Add your screenshot here -->
+![Bookmarks List](./snapshots/bookmarks-list.png)
+---
+
+## 🛠️ Tech Stack
+
+```
+Frontend  →  Next.js 14 (App Router) + TypeScript + Tailwind CSS
+Backend   →  Supabase (Auth + PostgreSQL + Realtime)
+Auth      →  Google OAuth via Supabase Auth
+Deploy    →  Vercel
+Icons     →  Lucide React
+```
+
+---
+
+## 🗂️ Project Structure
 
 ```
 smart-bookmark-app/
 ├── app/
 │   ├── auth/
 │   │   └── callback/
-│   │       └── route.ts          # OAuth callback handler
-│   ├── globals.css               # Global styles
-│   ├── layout.tsx                # Root layout
-│   └── page.tsx                  # Main application page
+│   │       └── route.ts        # OAuth callback handler
+│   ├── globals.css             # Global Tailwind styles
+│   ├── layout.tsx              # Root layout
+│   └── page.tsx                # Main app (auth + bookmarks UI)
 ├── lib/
 │   ├── supabase/
-│   │   ├── client.ts             # Client-side Supabase client
-│   │   └── server.ts             # Server-side Supabase client
-│   └── types.ts                  # TypeScript interfaces
-├── .env.local.example            # Environment variables template
+│   │   ├── client.ts           # Browser Supabase client
+│   │   └── server.ts           # Server-side Supabase client
+│   └── types.ts                # TypeScript interfaces
+├── .env.local                  # Environment variables (not committed)
 ├── next.config.js
-├── package.json
 ├── tailwind.config.js
-└── tsconfig.json
+└── README.md
 ```
 
-## Setup Instructions
+---
 
-### 1. Prerequisites
+## ⚙️ Setup & Installation
 
-- Node.js 18+ installed
-- A Supabase account (free tier works fine)
-- A Google Cloud project for OAuth
-
-### 2. Clone and Install
+### 1. Clone the Repo
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/your-username/smart-bookmark-app.git
 cd smart-bookmark-app
 npm install
 ```
 
-### 3. Supabase Setup
+### 2. Create Supabase Project
 
-#### 3.1 Create a Supabase Project
-
-1. Go to [supabase.com](https://supabase.com)
-2. Click "New Project"
-3. Fill in project details and create
-
-#### 3.2 Set Up Database Schema
-
-1. In your Supabase dashboard, go to **SQL Editor**
-2. Click "New Query"
-3. Paste and run this SQL:
+1. Go to [supabase.com](https://supabase.com) → New Project
+2. Open the **SQL Editor** and run this schema:
 
 ```sql
 -- Create bookmarks table
-create table bookmarks (
-  id uuid default gen_random_uuid() primary key,
-  user_id uuid references auth.users(id) on delete cascade not null,
-  url text not null,
-  title text not null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+CREATE TABLE bookmarks (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  url TEXT NOT NULL,
+  title TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- Enable Row Level Security
-alter table bookmarks enable row level security;
+ALTER TABLE bookmarks ENABLE ROW LEVEL SECURITY;
 
--- Users can only see their own bookmarks
-create policy "Users can view own bookmarks"
-  on bookmarks for select
-  using (auth.uid() = user_id);
+CREATE POLICY "Users can view own bookmarks"
+  ON bookmarks FOR SELECT USING (auth.uid() = user_id);
 
--- Users can insert their own bookmarks
-create policy "Users can insert own bookmarks"
-  on bookmarks for insert
-  with check (auth.uid() = user_id);
+CREATE POLICY "Users can insert own bookmarks"
+  ON bookmarks FOR INSERT WITH CHECK (auth.uid() = user_id);
 
--- Users can delete their own bookmarks
-create policy "Users can delete own bookmarks"
-  on bookmarks for delete
-  using (auth.uid() = user_id);
+CREATE POLICY "Users can delete own bookmarks"
+  ON bookmarks FOR DELETE USING (auth.uid() = user_id);
 
--- Create index for performance
-create index bookmarks_user_id_idx on bookmarks(user_id);
+CREATE INDEX bookmarks_user_id_idx ON bookmarks(user_id);
 
--- Enable realtime
-alter publication supabase_realtime add table bookmarks;
+ALTER PUBLICATION supabase_realtime ADD TABLE bookmarks;
 ```
 
-#### 3.3 Configure Google OAuth
+### 3. Configure Google OAuth
 
-1. In Supabase dashboard, go to **Authentication** > **Providers**
-2. Find **Google** and enable it
-3. Note the callback URL (it will be something like `https://xxxxx.supabase.co/auth/v1/callback`)
-
-#### 3.4 Set Up Google Cloud OAuth
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com)
-2. Create a new project or select existing
-3. Go to **APIs & Services** > **Credentials**
-4. Click **Create Credentials** > **OAuth client ID**
-5. Configure OAuth consent screen if prompted
-6. Choose **Web application**
-7. Add authorized redirect URIs:
-   - `https://xxxxx.supabase.co/auth/v1/callback` (your Supabase callback URL)
-   - `http://localhost:54321/auth/v1/callback` (for local development)
-8. Copy the **Client ID** and **Client Secret**
-9. Go back to Supabase > Authentication > Providers > Google
-10. Paste your Client ID and Client Secret
-11. Save
+1. Create credentials at [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials → OAuth 2.0 Client ID
+2. Add these redirect URIs:
+   ```
+   https://YOUR-PROJECT.supabase.co/auth/v1/callback
+   ```
+3. Copy **Client ID** and **Client Secret** into Supabase → Authentication → Providers → Google
 
 ### 4. Environment Variables
 
-1. Copy the example env file:
-```bash
-cp .env.local.example .env.local
-```
+Create a `.env.local` file in the project root:
 
-2. Fill in your Supabase credentials (found in Supabase dashboard > Settings > API):
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your-project-url
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 ```
+
+> ⚠️ Get these values from Supabase → Settings → API
 
 ### 5. Run Locally
 
@@ -148,157 +154,154 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 npm run dev
 ```
 
-Visit `http://localhost:3000`
+Visit `http://localhost:3000` 🎉
 
 ### 6. Deploy to Vercel
 
-#### 6.1 Push to GitHub
-
 ```bash
-git init
+# Push to GitHub first
 git add .
 git commit -m "Initial commit"
-git branch -M main
-git remote add origin <your-github-repo-url>
-git push -u origin main
+git push origin main
 ```
 
-#### 6.2 Deploy on Vercel
+Then go to [vercel.com](https://vercel.com) → New Project → Import from GitHub → Add environment variables → Deploy.
 
-1. Go to [vercel.com](https://vercel.com)
-2. Click "New Project"
-3. Import your GitHub repository
-4. Add environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-5. Click "Deploy"
+---
 
-#### 6.3 Update Google OAuth Redirect URIs
+## 🐛 Problems I Ran Into & How I Solved Them
 
-1. After deployment, copy your Vercel URL (e.g., `https://your-app.vercel.app`)
-2. Go to Google Cloud Console > Credentials
-3. Edit your OAuth client
-4. Add authorized redirect URI: `https://xxxxx.supabase.co/auth/v1/callback`
-5. Save
+> This section documents the real bugs I encountered during development and exactly how I fixed them.
 
-## Problems Encountered and Solutions
+---
 
-### Problem 1: OAuth Callback Issues
+### 🔴 Problem 1 — Wrong Supabase URL in `.env.local`
 
-**Issue**: After Google sign-in, redirect wasn't working properly.
+**What happened:**
 
-**Solution**: 
-- Created `/app/auth/callback/route.ts` to handle OAuth code exchange
-- Used `createClient()` instead of `createServerSupabaseClient()` in the callback route
-- Ensured the redirect URI in Google Cloud Console matched Supabase's callback URL exactly
+When setting up the Supabase environment variables, I accidentally pasted the **OAuth redirect URL** (the long Supabase auth callback URL) into `NEXT_PUBLIC_SUPABASE_URL` instead of the actual project URL.
 
-### Problem 2: Real-time Updates Not Working
+```env
+# ❌ What I accidentally pasted (WRONG)
+NEXT_PUBLIC_SUPABASE_URL=https://project.supabase.co/auth/v1/callback
 
-**Issue**: Changes in one tab weren't appearing in another tab.
+# ✅ What it should be (CORRECT)
+NEXT_PUBLIC_SUPABASE_URL=https://project.supabase.co
+```
 
-**Solution**:
-- Added `alter publication supabase_realtime add table bookmarks;` to SQL
-- Implemented proper real-time subscription with user ID filter:
+**The error it caused:**
+
+```
+GET /?error=invalid_request&error_code=bad_oauth_callback
+     &error_description=OAuth+state+parameter+missing
+```
+
+This error was misleading — it looked like an OAuth configuration problem, but was actually just a wrong URL in the environment file.
+
+**How I fixed it:**
+
+Opened `.env.local`, carefully copied the **Project URL** (not the callback URL) from Supabase → Settings → API, and restarted the dev server.
+
+> 💡 **Lesson**: Always double-check that `NEXT_PUBLIC_SUPABASE_URL` ends with `.supabase.co` and nothing else after it.
+
+---
+
+### 🟡 Problem 2 — UI Not Updating After Adding a Bookmark
+
+**What happened:**
+
+After successfully adding a bookmark, the list would **not update** on the screen. The bookmark only appeared after signing out and signing back in.
+
+**Root cause:**
+
+The Supabase real-time subscription was not correctly triggering a state update on the client. The `INSERT` event was being received but the state was not being set correctly due to a stale closure in the `useEffect`.
+
+**The broken code:**
+
 ```typescript
-const channel = supabase
-  .channel('bookmarks-changes')
-  .on('postgres_changes', {
-    event: '*',
-    schema: 'public',
-    table: 'bookmarks',
-    filter: `user_id=eq.${user.id}`
-  }, ...)
-```
-- Ensured proper cleanup with `supabase.removeChannel(channel)` in useEffect
-
-### Problem 3: Users Could See Other Users' Bookmarks
-
-**Issue**: Row Level Security wasn't properly configured initially.
-
-**Solution**:
-- Enabled RLS on the bookmarks table
-- Created proper policies using `auth.uid()` to filter by user
-- Added cascade delete so bookmarks are removed when user is deleted
-
-### Problem 4: Middleware Conflicts with App Router
-
-**Issue**: Initial implementation tried to use middleware for auth, causing routing issues.
-
-**Solution**:
-- Removed middleware approach
-- Used client-side auth checking with `useEffect` and `onAuthStateChange`
-- Server-side client is available but not needed for this simple use case
-
-### Problem 5: Type Safety Issues
-
-**Issue**: TypeScript errors with Supabase types.
-
-**Solution**:
-- Created custom TypeScript interfaces in `lib/types.ts`
-- Used proper typing for Supabase responses
-- Added type assertions where necessary
-
-### Problem 6: Google Avatar Images Not Loading
-
-**Issue**: Next.js blocking external images by default.
-
-**Solution**:
-- Added `lh3.googleusercontent.com` to `next.config.js` image domains
-```javascript
-images: {
-  domains: ['lh3.googleusercontent.com'],
-}
+// ❌ State was not updating because the subscription
+// was capturing a stale reference to the bookmarks array
+.on('postgres_changes', { event: 'INSERT', ... }, (payload) => {
+  setBookmarks([payload.new, ...bookmarks]) // stale 'bookmarks' reference!
+})
 ```
 
-## Features Breakdown
+**How I fixed it:**
 
-### Authentication
-- Google OAuth via Supabase Auth
-- No email/password required
-- Automatic session management
-- Profile picture from Google account
+Used the **functional form** of `setState` to always get the latest state:
 
-### Bookmarks Management
-- Add bookmarks with URL and title
-- Display bookmarks in reverse chronological order
-- Delete bookmarks with confirmation UI
-- Open bookmarks in new tab
+```typescript
+// ✅ Using functional update avoids stale closure
+.on('postgres_changes', { event: 'INSERT', ... }, (payload) => {
+  setBookmarks((prev) => [payload.new as Bookmark, ...prev])
+})
+```
 
-### Real-time Sync
-- Changes appear instantly across all open tabs
-- Powered by Supabase Realtime
-- No polling or page refresh needed
+> 💡 **Lesson**: When updating state inside subscriptions or event listeners, always use the `setState(prev => ...)` functional form to avoid stale closures.
 
-### Security
-- Row Level Security ensures data privacy
-- Each user can only access their own bookmarks
-- Secure OAuth flow
-- Environment variables for sensitive data
+---
 
-## Testing the App
+### 🟠 Problem 3 — App Redirecting to `localhost` After Vercel Deployment
 
-1. Open the deployed URL
-2. Click "Sign in with Google"
-3. Authorize the app
-4. Add a bookmark with URL and title
-5. Open the same URL in another tab/browser
-6. Add/delete bookmarks and watch them sync in real-time
-7. Sign out and verify you can't see bookmarks
+**What happened:**
 
-## Future Enhancements
+After deploying to Vercel and trying to sign in with Google, the OAuth flow would complete but then redirect back to `http://localhost:3000` instead of the live Vercel URL — breaking the login completely for deployed users.
 
-- [ ] Search and filter bookmarks
-- [ ] Tags/categories
-- [ ] Bookmark folders
-- [ ] Import/export bookmarks
-- [ ] Browser extension
-- [ ] Bookmark preview/thumbnails
-- [ ] Sharing bookmarks with others
+**Root cause:**
 
-## License
+Supabase uses the **Site URL** and **Redirect URLs** settings to determine where to send users after authentication. These were still set to `localhost` from local development and were never updated after deployment.
 
-MIT
+**How I fixed it:**
 
-## Support
+1. Went to **Supabase Dashboard → Authentication → URL Configuration**
+2. Updated **Site URL** from `http://localhost:3000` to `https://my-app.vercel.app`
+3. Added the Vercel URL to **Redirect URLs**:
+   ```
+   https://my-app.vercel.app/**
+   https://my-app.vercel.app/auth/callback
+   ```
+4. Also added the Vercel domain to **Google Cloud Console → Authorized redirect URIs**
 
-For issues or questions, please open an issue on GitHub.
+> 💡 **Lesson**: After every deployment to a new domain, update Supabase's Site URL and Redirect URLs. Keep `localhost` entries for local dev, and add production URLs alongside them.
+
+---
+
+## ✅ All Requirements Met
+
+- [x] Google OAuth (no email/password login)
+- [x] Add bookmarks (URL + title)
+- [x] Private bookmarks per user (Row Level Security)
+- [x] Real-time updates across tabs (Supabase Realtime)
+- [x] Delete bookmarks
+- [x] Deployed on Vercel with live URL
+
+
+```
+smart-bookmark-app/
+└── snapshots/
+    ├── demo.gif           ← Main demo GIF (shown at top)
+    ├── login.png          ← Login page screenshot
+    ├── empty-state.png    ← Empty dashboard screenshot
+    ├── add-bookmark.gif   ← GIF of adding a bookmark
+    ├── bookmarks-list.png ← Screenshot of bookmark list
+    └── realtime-sync.gif  ← GIF of real-time sync across tabs
+```
+
+---
+
+## 🙏 Built With Help From
+
+- [Supabase Docs](https://supabase.com/docs)
+- [Next.js App Router Docs](https://nextjs.org/docs)
+- [Tailwind CSS](https://tailwindcss.com)
+- [Lucide Icons](https://lucide.dev)
+
+---
+
+<div align="center">
+
+Made with ❤️ by **Roshal D'Souza**
+
+⭐ If you found this useful, give it a star!
+
+</div>

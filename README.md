@@ -12,7 +12,6 @@
 
 ---
 
-<!-- Replace the link below with your actual deployed URL screenshot -->
 > 💡 **Live Demo**: [your-app.vercel.app](https://smart-bookmark-app-68pt.vercel.app/)
 
 </div>
@@ -36,18 +35,16 @@
 ## 📸 Screenshots
 
 ### 🔑 Login Screen
-<!-- Add your screenshot here -->
-![Login Screen](./snapshots/login.png)
+![Login Screen](./snapshots/signin.jpeg)
 
 
 ### 📌 Adding a Bookmark
-<!-- Add your screenshot here — or use a GIF! -->
-![Adding Bookmark](./snapshots/add-bookmark.gif)
+![Adding Bookmark](./snapshots/empty.jpeg)
 
 
 ### 📋 Bookmarks List
-<!-- Add your screenshot here -->
-![Bookmarks List](./snapshots/bookmarks-list.png)
+
+![Bookmarks List](./snapshots/list.jpeg)
 ---
 
 ## 🛠️ Tech Stack
@@ -91,7 +88,7 @@ smart-bookmark-app/
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/smart-bookmark-app.git
+git clone https://github.com/roshaldsouza/Smart-bookmark-app.git
 cd smart-bookmark-app
 npm install
 ```
